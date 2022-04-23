@@ -17,16 +17,12 @@ import static org.hamcrest.CoreMatchers.is;
 
 public class DemoWebShopTest {
 
-    @BeforeAll
-    static void beforeAll() {
-        RestAssured.filters(new AllureRestAssured());
-    }
-
     @Test
     void loginWithCookieTest() {
         String authorizationCookie =
                 given()
                         .filter(withCustomTemplates())
+                        .log().all()
                         .contentType("application/x-www-form-urlencoded; charset=UTF-8")
                         .formParam("Email", "29061990a@gmail.com")
                         .formParam("Password", "rfinetd29")
@@ -51,6 +47,7 @@ public class DemoWebShopTest {
         ValidatableResponse response =
                 given()
                         .filter(withCustomTemplates())
+                        .log().all()
                         .contentType("application/x-www-form-urlencoded; charset=UTF-8")
                         .cookie("Nop.customer=e82ccf75-c99d-468a-a10c-2b0100fc4892;")
                         .body("product_attribute_72_5_18=53" +
