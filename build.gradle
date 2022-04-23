@@ -1,5 +1,7 @@
 plugins {
     id 'java-library'
+    id "io.qameta.allure" version "2.9.6"
+    id "io.freefair.lombok" version "6.0.0-m2"
 }
 
 repositories {
@@ -10,12 +12,30 @@ def
         restAssured = "4.4.0",
         junitVersion = "5.8.2",
         selenideVersion = "6.3.4",
-        slf4jVersion = "1.7.36"
+        slf4jVersion = "1.7.36",
+        allureVersion = "2.17.3"
+
+allure {
+    adapter {
+        aspectjWeaver.set(true)
+        frameworks {
+            junit5 {
+                adapterVersion.set(allureVersion)
+            }
+        }
+    }
+    report {
+        version.set(allureVersion)
+    }
+}
+
 
 dependencies {
     testImplementation(
             "com.codeborne:selenide:$selenideVersion",
             "io.rest-assured:rest-assured:$restAssured",
+            "io.rest-assured:json-schema-validator:$restAssured",
+            "io.qameta.allure:allure-rest-assured:$allureVersion",
             "org.assertj:assertj-core:3.22.0",
             "org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testRuntimeOnly(

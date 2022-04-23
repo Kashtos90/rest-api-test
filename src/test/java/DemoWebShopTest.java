@@ -1,5 +1,8 @@
 
+import io.qameta.allure.restassured.AllureRestAssured;
+import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Cookie;
 
@@ -8,15 +11,22 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static io.restassured.RestAssured.given;
+import static listeners.CustomAllureListener.withCustomTemplates;
 import static org.hamcrest.CoreMatchers.is;
 
 
 public class DemoWebShopTest {
 
+    @BeforeAll
+    static void beforeAll() {
+        RestAssured.filters(new AllureRestAssured());
+    }
+
     @Test
     void loginWithCookieTest() {
         String authorizationCookie =
                 given()
+                        .filter(withCustomTemplates())
                         .contentType("application/x-www-form-urlencoded; charset=UTF-8")
                         .formParam("Email", "29061990a@gmail.com")
                         .formParam("Password", "rfinetd29")
@@ -40,6 +50,7 @@ public class DemoWebShopTest {
         Integer cartSize = 0;
         ValidatableResponse response =
                 given()
+                        .filter(withCustomTemplates())
                         .contentType("application/x-www-form-urlencoded; charset=UTF-8")
                         .cookie("Nop.customer=e82ccf75-c99d-468a-a10c-2b0100fc4892;")
                         .body("product_attribute_72_5_18=53" +
