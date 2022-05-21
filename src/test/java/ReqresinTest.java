@@ -1,3 +1,4 @@
+import io.restassured.response.Response;
 import models.Morpheus;
 import models.UserData;
 import org.junit.jupiter.api.DisplayName;
@@ -18,10 +19,10 @@ import static specs.UserSpecs.responsemorpheusSpec;
 public class ReqresinTest {
 
     @Test
-    @DisplayName("Обновление пользователя Morpheus")
+    @DisplayName("Обновление данных пользователя Morpheus")
     public void UpdateMorpheus() {
 
-        step("Обновляем данные о Morpheus");
+        step("Указываем новые данные о Morpheus");
         Morpheus morpheus = new Morpheus();
         morpheus.setName("morpheus");
         morpheus.setJob("zion resident");
@@ -61,7 +62,7 @@ public class ReqresinTest {
     }
 
     @Test
-    @DisplayName("Проверка наличия почты Tracey")
+    @DisplayName("Проверка почты с 'Groovy'")
     public void checkEmailUsing() {
 
         step("Проверяем почтовый ящик tracey.ramos@reqres.in");
@@ -83,6 +84,7 @@ public class ReqresinTest {
         String data = "{ \"email\": \"eve.holt@reqres.in\", \"password\": \"cityslicka\" }";
 
         step("Отправляем запрос авторизации");
+        Response response =
         given()
                 .spec(request)
                 .body(data)
@@ -91,6 +93,32 @@ public class ReqresinTest {
                 .then()
                 .spec(responseSpec)
                 .log().body()
-                .body("token", is(equalTo("QpwL5tke4Pnpja7X4")));
+                .body("token", is(notNullValue()))
+                .extract().response();
+
+        step("Проверяем полученный токен");
+        assert response.body().path("token").equals("QpwL5tke4Pnpja7X4");
+    }
+
+    @Test
+    @DisplayName("Проверка неуспешной регистрации")
+    void registerUnsuccessful() {
+
+        String data = "{\"email\": \"sydney@fife\"}";
+
+        step("Отправляем запрос на регистрацию");
+        Response response =
+                given()
+                        .spec(request)
+                        .body(data)
+                        .when()
+                        .post("/api/register")
+                        .then()
+                        .statusCode(400)
+                        .log().body()
+                        .extract().response();
+
+        step("Проверяем сообщение об ошибке");
+        assert response.body().path("error").equals("Missing password");
     }
 }
