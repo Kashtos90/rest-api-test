@@ -12,11 +12,11 @@ public class UserSpecs {
 
     public static RequestSpecification requestSpec = with()
             .filter(withCustomTemplates())
-            .baseUri("https://reqres.in/api/users")
+            .baseUri("https://reqres.in/api/users/2")
             .log().body()
             .contentType(ContentType.JSON);
 
     public static ResponseSpecification responsemorpheusSpec = new ResponseSpecBuilder()
-            .expectStatusCode(201)
+            .expectStatusCode(200)
             .build();
 }

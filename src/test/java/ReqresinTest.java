@@ -1,47 +1,29 @@
+import models.Morpheus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import static io.restassured.RestAssured.get;
-import static org.hamcrest.Matchers.is;
+import static io.restassured.RestAssured.given;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+
+import static specs.UserSpecs.requestSpec;
+import static specs.UserSpecs.responsemorpheusSpec;
 
 public class ReqresinTest {
 
     @Test
-    @DisplayName("Проверка емейла")
-    void checkDataEmail() {
-        get("https://reqres.in/api/users/2")
-            .then()
-                .body("data.email", is("janet.weaver@reqres.in"));
-    }
+    @DisplayName("Обновление пользователя Morpheus")
+    public void UpdateMorpheus () {
+        Morpheus morpheus = new Morpheus();
+        morpheus.setName("morpheus");
+        morpheus.setJob("zion resident");
 
-    @Test
-    @DisplayName("Проверка имени")
-    void checkFirstName() {
-        get("https://reqres.in/api/users/2")
+        given()
+                .spec(requestSpec)
+                .body(morpheus)
+                .when()
+                .put("morpheusdata")
                 .then()
-                .body("data.first_name", is("Janet"));
-    }
-
-    @Test
-    @DisplayName("Проверка фамилии")
-    void checkLastName() {
-        get("https://reqres.in/api/users/2")
-                .then()
-                .body("data.last_name", is("Weaver"));
-    }
-
-    @Test
-    @DisplayName("Проверка URl'a")
-    void checkUrl() {
-        get("https://reqres.in/api/users/2")
-                .then()
-                .body("support.url", is("https://reqres.in/#support-heading"));
-    }
-
-    @Test
-    @DisplayName("Проверка текста")
-    void checkText() {
-        get("https://reqres.in/api/users/2")
-                .then()
-                .body("support.text", is("To keep ReqRes free, contributions towards server costs are appreciated!"));
+                .spec(responsemorpheusSpec)
+                .body(matchesJsonSchemaInClasspath("userdata.json"))
+                .extract().as(Morpheus.class);
     }
 }
