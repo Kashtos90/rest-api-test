@@ -8,6 +8,7 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static specs.Specs.request;
 import static specs.Specs.responseSpec;
@@ -18,7 +19,7 @@ public class ReqresinTest {
 
     @Test
     @DisplayName("Обновление пользователя Morpheus")
-    public void UpdateMorpheus () {
+    public void UpdateMorpheus() {
 
         step("Обновляем данные о Morpheus");
         Morpheus morpheus = new Morpheus();
@@ -57,5 +58,39 @@ public class ReqresinTest {
 
         step("Проверяем совпадение данных пользователей в ответе");
         assertEquals(7, data.getUser()[0].getId());
+    }
+
+    @Test
+    @DisplayName("Проверка наличия почты Tracey")
+    public void checkEmailUsing() {
+
+        step("Проверяем почтовый ящик tracey.ramos@reqres.in");
+        given()
+                .spec(request)
+                .basePath("/api")
+                .when()
+                .get("/users")
+                .then()
+                .log().body()
+                .body("data.findAll{it.email =~/.*?@reqres.in/}.email.flatten()",
+                        hasItem("tracey.ramos@reqres.in"));
+    }
+
+    @Test
+    @DisplayName("Проверка успешной авторизации")
+    void loginSuccessful() {
+
+        String data = "{ \"email\": \"eve.holt@reqres.in\", \"password\": \"cityslicka\" }";
+
+        step("Отправляем запрос авторизации");
+        given()
+                .spec(request)
+                .body(data)
+                .when()
+                .post("/api/login")
+                .then()
+                .spec(responseSpec)
+                .log().body()
+                .body("token", is(equalTo("QpwL5tke4Pnpja7X4")));
     }
 }
