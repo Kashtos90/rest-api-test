@@ -14,7 +14,4 @@ public class User {
     private String firstName;
     @JsonProperty("last_name")
     private String lastName;
-    private String name;
-    private String year;
-    private String color;
 }
