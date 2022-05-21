@@ -16,7 +16,7 @@ public class UserSpecs {
             .log().body()
             .contentType(ContentType.JSON);
 
-    public static ResponseSpecification responsekashtosSpec = new ResponseSpecBuilder()
+    public static ResponseSpecification responsemorpheusSpec = new ResponseSpecBuilder()
             .expectStatusCode(201)
             .build();
 }
