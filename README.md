@@ -25,4 +25,12 @@
 <img width="6%" title="Allure Report" src="images/logo/allure-TT-logo.svg">
 </p>
 
+## :heavy_check_mark: Реализованные тесты
+> В проекте были реализованы:
+- Обновление данных пользователя Morpheus
+- Проверка наличия списка пользователей
+- Проверка почты с 'Groovy'
+- Проверка успешной авторизации
+- Проверка неуспешной регистрации
+
 https://jenkins.autotests.cloud/job/reqresin-api/ джоба
