@@ -20,7 +20,7 @@ public class ReqresinTest {
 
     @Test
     @DisplayName("Обновление данных пользователя Morpheus")
-    public void UpdateMorpheus() {
+    public void updateMorpheus() {
 
         step("Указываем новые данные о Morpheus");
         Morpheus morpheus = new Morpheus();
