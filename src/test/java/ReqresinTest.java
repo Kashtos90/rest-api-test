@@ -19,31 +19,6 @@ import static specs.UserSpecs.responsemorpheusSpec;
 public class ReqresinTest {
 
     @Test
-    @DisplayName("Обновление данных пользователя Morpheus")
-    public void updateMorpheus() {
-
-        step("Указываем новые данные о Morpheus");
-        Morpheus morpheus = new Morpheus();
-        morpheus.setName("morpheus");
-        morpheus.setJob("zion resident");
-
-        step("Отправляем запрос на обновление данных");
-        given()
-                .spec(requestSpec)
-                .body(morpheus)
-                .when()
-                .put("morpheusdata")
-                .then()
-                .spec(responsemorpheusSpec)
-                .body(matchesJsonSchemaInClasspath("userdata.json"))
-                .extract().as(Morpheus.class);
-
-        step("Проверяем полученные в ответе данные");
-        assertThat(morpheus.getName()).isEqualTo("morpheus");
-        assertThat(morpheus.getJob()).isEqualTo("zion resident");
-    }
-
-    @Test
     @DisplayName("Проверка наличия списка пользователей")
     public void usersListTest() {
 
@@ -75,6 +50,31 @@ public class ReqresinTest {
                 .log().body()
                 .body("data.findAll{it.email =~/.*?@reqres.in/}.email.flatten()",
                         hasItem("tracey.ramos@reqres.in"));
+    }
+
+    @Test
+    @DisplayName("Обновление данных пользователя Morpheus")
+    public void updateMorpheus() {
+
+        step("Указываем новые данные о Morpheus");
+        Morpheus morpheus = new Morpheus();
+        morpheus.setName("morpheus");
+        morpheus.setJob("zion resident");
+
+        step("Отправляем запрос на обновление данных");
+        given()
+                .spec(requestSpec)
+                .body(morpheus)
+                .when()
+                .put("morpheusdata")
+                .then()
+                .spec(responsemorpheusSpec)
+                .body(matchesJsonSchemaInClasspath("userdata.json"))
+                .extract().as(Morpheus.class);
+
+        step("Проверяем полученные в ответе данные");
+        assertThat(morpheus.getName()).isEqualTo("morpheus");
+        assertThat(morpheus.getJob()).isEqualTo("zion resident");
     }
 
     @Test
