@@ -53,6 +53,29 @@ public class ReqresinTest {
     }
 
     @Test
+    @DisplayName("Проверка успешной авторизации")
+    void loginSuccessful() {
+
+        String data = "{ \"email\": \"eve.holt@reqres.in\", \"password\": \"cityslicka\" }";
+
+        step("Отправляем запрос авторизации");
+        Response response =
+                given()
+                        .spec(request)
+                        .body(data)
+                        .when()
+                        .post("/api/login")
+                        .then()
+                        .spec(responseSpec)
+                        .log().body()
+                        .body("token", is(notNullValue()))
+                        .extract().response();
+
+        step("Проверяем полученный токен");
+        assert response.body().path("token").equals("QpwL5tke4Pnpja7X4");
+    }
+
+    @Test
     @DisplayName("Обновление данных пользователя Morpheus")
     public void updateMorpheus() {
 
@@ -75,29 +98,6 @@ public class ReqresinTest {
         step("Проверяем полученные в ответе данные");
         assertThat(morpheus.getName()).isEqualTo("morpheus");
         assertThat(morpheus.getJob()).isEqualTo("zion resident");
-    }
-
-    @Test
-    @DisplayName("Проверка успешной авторизации")
-    void loginSuccessful() {
-
-        String data = "{ \"email\": \"eve.holt@reqres.in\", \"password\": \"cityslicka\" }";
-
-        step("Отправляем запрос авторизации");
-        Response response =
-        given()
-                .spec(request)
-                .body(data)
-                .when()
-                .post("/api/login")
-                .then()
-                .spec(responseSpec)
-                .log().body()
-                .body("token", is(notNullValue()))
-                .extract().response();
-
-        step("Проверяем полученный токен");
-        assert response.body().path("token").equals("QpwL5tke4Pnpja7X4");
     }
 
     @Test
